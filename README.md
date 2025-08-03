@@ -13,4 +13,12 @@ terminal using [xterm.js](https://xtermjs.org/).
    ```bash
    npm start
    ```
-3. Open `http://localhost:3000` in your browser to access the terminal.
+3. Open `http://localhost:3000` in your browser to access the terminal. The
+   terminal dynamically resizes with the browser window.
+
+To listen on a different port, set the `PORT` environment variable before
+starting the server:
+
+```bash
+PORT=8080 npm start
+```

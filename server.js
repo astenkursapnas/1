@@ -20,8 +20,22 @@ wss.on('connection', ws => {
   });
 
   shell.onData(data => ws.send(data));
+  shell.onExit(() => ws.close());
 
-  ws.on('message', msg => shell.write(msg));
+  ws.on('message', msg => {
+    const data = msg.toString();
+    try {
+      const { type, cols, rows } = JSON.parse(data);
+      if (type === 'resize') {
+        shell.resize(cols, rows);
+        return;
+      }
+    } catch {
+      // not a JSON message, treat as shell input
+    }
+    shell.write(data);
+  });
+
   ws.on('close', () => shell.kill());
 });
 

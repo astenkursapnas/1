@@ -23,6 +23,18 @@
     const socket = new WebSocket(`ws://${location.host}`);
     term.onData(data => socket.send(data));
     socket.onmessage = e => term.write(e.data);
+
+    const sendResize = () => {
+      fitAddon.fit();
+      socket.send(JSON.stringify({
+        type: 'resize',
+        cols: term.cols,
+        rows: term.rows
+      }));
+    };
+
+    socket.addEventListener('open', sendResize);
+    window.addEventListener('resize', sendResize);
   </script>
 </body>
 </html>
