@@ -1,0 +1,15 @@
+{
+  "name": "web-terminal",
+  "version": "1.0.0",
+  "description": "Simple Node.js web server exposing a terminal using xterm.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests specified\""
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "node-pty": "^1.0.0"
+  }
+}

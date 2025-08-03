@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Web Terminal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #terminal { height: 100%; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+  <script>
+    const term = new Terminal();
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal'));
+    fitAddon.fit();
+
+    const socket = new WebSocket(`ws://${location.host}`);
+    term.onData(data => socket.send(data));
+    socket.onmessage = e => term.write(e.data);
+
+    const sendResize = () => {
+      fitAddon.fit();
+      socket.send(JSON.stringify({
+        type: 'resize',
+        cols: term.cols,
+        rows: term.rows
+      }));
+    };
+
+    socket.addEventListener('open', sendResize);
+    window.addEventListener('resize', sendResize);
+  </script>
+</body>
+</html>
